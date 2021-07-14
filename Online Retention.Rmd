@@ -3,6 +3,9 @@ title: "Retail Shoppers Intention Data Analysis"
 author: "Joan Mwangi"
 date: "7/3/2021"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, cache = F}
@@ -11,9 +14,13 @@ knitr::opts_chunk$set(error = TRUE)
 
 # Problem Definition
 
-*Kira Plastinina is a fashion retail store located in China,Russia, Belarus, Ukraine, Philippines, Kazakhstan, Armenia and Ukraine mostly targeting ladies between 15 - 25 years.*
+*Kira Plastinina is a fashion retail store located in China,Russia,
+Belarus, Ukraine, Philippines, Kazakhstan, Armenia and Ukraine mostly
+targeting ladies between 15 - 25 years.*
 
-*My goal as a data analyst is to get meaningful insights of customers behavioral patterns and behavior using data collected within the past one year.*
+*My goal as a data analyst is to get meaningful insights of customers
+behavioral patterns and behavior using data collected within the past
+one year.*
 
 # Data Sourcing
 
@@ -23,19 +30,47 @@ knitr::opts_chunk$set(error = TRUE)
 
     > The following is a breakdown of the data set's variables:
     >
-    > -   "Administrative", "Administrative Duration", "Informational", "Informational Duration", "Product Related" and "Product Related Duration" represents the number of different types of pages visited by the visitor in that session and total time spent in each of these page categories. The values of these features are derived from the URL information of the pages visited by the user and updated in real-time when a user takes an action, e.g. moving from one page to another.
+    > -   "Administrative", "Administrative Duration", "Informational",
+    >     "Informational Duration", "Product Related" and "Product
+    >     Related Duration" represents the number of different types of
+    >     pages visited by the visitor in that session and total time
+    >     spent in each of these page categories. The values of these
+    >     features are derived from the URL information of the pages
+    >     visited by the user and updated in real-time when a user takes
+    >     an action, e.g. moving from one page to another.
     >
-    > -   The "Bounce Rate", "Exit Rate" and "Page Value" features represent the metrics measured by "Google Analytics" for each page in the e-commerce site.
+    > -   The "Bounce Rate", "Exit Rate" and "Page Value" features
+    >     represent the metrics measured by "Google Analytics" for each
+    >     page in the e-commerce site.
     >
-    > -   The value of the "Bounce Rate" feature for a web page refers to the percentage of visitors who enter the site from that page and then leave ("bounce") without triggering any other requests to the analytics server during that session.
+    > -   The value of the "Bounce Rate" feature for a web page refers
+    >     to the percentage of visitors who enter the site from that
+    >     page and then leave ("bounce") without triggering any other
+    >     requests to the analytics server during that session.
     >
-    > -   The value of the "Exit Rate" feature for a specific web page is calculated as for all page views to the page, the percentage that was the last in the session.
+    > -   The value of the "Exit Rate" feature for a specific web page
+    >     is calculated as for all page views to the page, the
+    >     percentage that was the last in the session.
     >
-    > -   The "Page Value" feature represents the average value for a web page that a user visited before completing an e-commerce transaction.
+    > -   The "Page Value" feature represents the average value for a
+    >     web page that a user visited before completing an e-commerce
+    >     transaction.
     >
-    > -   The "Special Day" feature indicates the closeness of the site visiting time to a specific special day (e.g. Mother's Day, Valentine's Day) in which the sessions are more likely to be finalized with the transaction. The value of this attribute is determined by considering the dynamics of e-commerce such as the duration between the order date and delivery date. For example, for Valentine's day, this value takes a nonzero value between February 2 and February 12, zero before and after this date unless it is close to another special day, and its maximum value of 1 on February 8.
+    > -   The "Special Day" feature indicates the closeness of the site
+    >     visiting time to a specific special day (e.g. Mother's Day,
+    >     Valentine's Day) in which the sessions are more likely to be
+    >     finalized with the transaction. The value of this attribute is
+    >     determined by considering the dynamics of e-commerce such as
+    >     the duration between the order date and delivery date. For
+    >     example, for Valentine's day, this value takes a nonzero value
+    >     between February 2 and February 12, zero before and after this
+    >     date unless it is close to another special day, and its
+    >     maximum value of 1 on February 8.
     >
-    > -   The dataset also includes the operating system, browser, region, traffic type, visitor type as returning or new visitor, a Boolean value indicating whether the date of the visit is weekend, and month of the year.
+    > -   The dataset also includes the operating system, browser,
+    >     region, traffic type, visitor type as returning or new
+    >     visitor, a Boolean value indicating whether the date of the
+    >     visit is weekend, and month of the year.
 
 # Check the Data
 
@@ -60,7 +95,8 @@ dim(online)
 str(online)
 ```
 
-*The dataset has 2 logical columns, 2 character columns, 7 numerical columns and 6 integer columns*
+*The dataset has 2 logical columns, 2 character columns, 7 numerical
+columns and 6 integer columns*
 
 ### Viewing the class of the dataset
 
@@ -79,7 +115,9 @@ duplicates <- online[duplicated(online),]
 dim(duplicates)
 ```
 
--   There are 119 duplicates Removing the duplicates
+-   There are 119 duplicates
+
+    #### Removing duplicates
 
 ```{r}
 new_online <- online[-which(duplicated(online)),]
@@ -92,7 +130,7 @@ dim(new_online)
 colSums(is.na(new_online))
 ```
 
--   I'll fill them with mode
+-   Filling null values with mode
 
 ```{r}
 #first loading the library
@@ -100,12 +138,8 @@ library(tidyr)
 ```
 
 ```{r}
-#creating the mode function
-gettingmode <- function(v){
-  uniqv <- unique(v)
-  mode <- uniqv[which.max(tabulate(match(v, uniqv)))]
-  mode}
-
+gettingmode <- function(x){uniqx <- unique(x)
+uniqx[which.max(tabulate(match(x,uniqx)))]}
 ```
 
 ```{r}
@@ -117,7 +151,8 @@ colSums(is.na(new_online))
 
 # Perform Exploratory Data Analysis
 
-Viewing the data type of each column in order to assess which type plots to visualize
+Viewing the data type of each column in order to assess which type plots
+to visualize
 
 ```{r}
 sapply(new_online,class)
@@ -151,10 +186,11 @@ summary(new_online)
 
 ```
 
-*According to the histogram, majority of the users didn't visit the site during special days*
+*According to the histogram, majority of the users didn't visit the site
+during special days*
 
 ```{r}
-#histogram of administratuve
+#histogram of administrative
  hist(new_online$OperatingSystems,
      main= "Histogram of Operating systems",
      xlab="Operating systems",col="darkmagenta",freq=FALSE)
@@ -180,7 +216,9 @@ summary(new_online)
      xlab="Traffic type",breaks=4,col="darkmagenta",xlim=c(0,25),freq=FALSE)
 ```
 
-*Majority of the values within the traffic type is between 0 and 5* \#\#\#Bar plots
+*Majority of the values within the traffic type is between 0 and 5*
+
+### Bar plots
 
 ```{r,echo=FALSE}
 #Change main title and axis titles
@@ -204,7 +242,7 @@ From the bar plots we can see that;
 
 ## Bi-variate Analysis
 
-\#\#\#Correlation Matrix
+### Correlation Matrix
 
 ```{r}
         #install.packages("corrplot")
@@ -222,7 +260,8 @@ From the bar plots we can see that;
 
 The correlation matrix show that:
 
--   Browser and operating systems are positively correlated with a value of 0.21
+-   Browser and operating systems are positively correlated with a value
+    of 0.21
 
 -   Traffic type and operating system with 0.18
 
@@ -234,20 +273,26 @@ The correlation matrix show that:
 
 # Implementing the Solution
 
-\#\#Feature engineering \#\#\#Label Encoding
+# Feature engineering
+
+### Data Pre processing
 
 ```{r}
 #install.packages("caret")
+install.packages("lattice")
+install.packages("ggplot2")
 library(caret)
 ```
 
 ```{r}
-#transforming the logical variables variables
+#transforming the logical variables 
 
 new_online$Revenue <- as.numeric(new_online$Revenue)
 new_online$Weekend <- as.numeric(new_online$Weekend)
 head(new_online)
 ```
+
+### Label Encoding
 
 ```{r}
 library(CatEncoders)
@@ -257,99 +302,161 @@ library(CatEncoders)
 
  encode <- LabelEncoder.fit(new_online$Month)
   new_online$Month <- transform(encode, new_online$Month)
-unique(new_online$Month)
+print(unique(new_online$Month))
+print(unique(new_online$VisitorType))
 ```
+
+### scaling the dataset
 
 ```{r,echo=FALSE}
-new_online <- sapply(new_online,as.numeric)
+
+#scaling the data, to a mean of 0 and standard deviation of 1
+online1 <- new_online[sapply(new_online, is.numeric)]
+#head(online1)
+online.norm <- as.data.frame(scale(online1))
+head(online.norm)
 ```
 
-### Scaling the data
+## Computing the kmeans clustering in r
 
 ```{r}
-#scaling the data by subtracting with the mean and dividing by the standard deviation
-scaled_online <- scale(new_online)
+set.seed(123)
+#setting revenue as online.class
 
-head(scaled_online, n=3)
-```
+online.class <- new_online[,18]
+online_kmeans <- kmeans(online.norm,centers=3,nstart=25)
 
-```{r}
-#Splitting the dataset
-scaled_online1 <- scaled_online[,1:17]
-scaled_online.class <- scaled_online[,"Revenue"]
-head(scaled_online1,n=3)
-#previewing the number of records in each center
-```
-
-```{r}
-#using the kmeans with the number of centroids set at 3
-#result <- kmeans(scaled_online1,3)
-#result$size
+print(online_kmeans)
 ```
 
 ```{r}
+
+online_kmeans$size
+```
+
+The first cluster has 7910 values, the second cluster has 1947 values
+and the third cluster has 2354 values
+
+## Visualizing the kmeans clusters
+
+```{r}
+
 #installing the packages
-#install.packages("factoextra")
-#install.packages("NbClust")
+install.packages("factoextra")
+install.packages("NbClust")
 ```
-
-\#\#\#Optimization using the silhoutte method
 
 ```{r}
 library(factoextra)
 library(NbClust)
+library(ggplot2)
+fviz_cluster(online_kmeans,data= online.norm)
+```
+
+### Determining the optimal number of clusters 
+
+### Method 1 : Elbow Method
+
+```{r}
+library(factoextra)
+library(NbClust)
+library(ggplot2)
 ```
 
 ```{r message=FALSE, warning=FALSE}
-fviz_nbclust(x = scaled_online,FUNcluster = kmeans, method = 'wss')
+fviz_nbclust(x = online.norm,FUNcluster = kmeans, method = 'wss')
 ```
+
+the number of clusters using the elbow method is 3
+
+### 2. Silhouette Method
+
+```{r}
+fviz_nbclust(x = online.norm,FUNcluster = kmeans, method = 'silhouette' )
+```
+
+Silhouette method suggests that the optimal number of clusters is 2
 
 ```{r}
 #given that the the biggest joint is at 8, ill set the clusters at 8 and visualize them
-model <- kmeans(scaled_online1,8)
-options(repr.plot.width=14, repr.plot.width=9)
-fviz_cluster(model,scaled_online1)
+online_k2 <- kmeans(online.norm,2)
+fviz_cluster(online_k2,online.norm)
 ```
 
-\#\#Hierarchical clustering
+using 2 clusters suggested by silhouette method didn't create clear
+clusters
+
+## Hierarchical clustering 
+
+### Identifying hierarchical clustering methods that can identify stronger clustering structures
 
 ```{r}
-d <- dist(scaled_online, method = "euclidean")
-#using the wards method for hierarchical clustering
-res.hc <- hclust(d, method = "ward.D2")
-#plotting the hierarchical clustering
-plot(res.hc, cex = 0.6, hang = -1)
+
+# Compute distances using euclidean
+d <- dist(scale(online.norm), method = "euclidean")
+#hierarchical clustering using ward.d2
+hc <- hclust(d, method = "ward.D2")
 ```
 
+### 
+
 ```{r}
-clusters <- hclust(dist(scaled_online1[, 5:6]))
-plot(clusters)
+#plotting a dendogram 
+plot(hc, xlim = c(1, 20), ylim = c(1,8))
+
 ```
 
 ```{r}
 cut <- cutree(clusters, 6)
-table(cut,scaled_online.class)
-#comparing the results gotten with scaled_online.class, and it can be viewed
+table(cut,online.class)
+#comparing the results gotten with scaled_online.class
+```
+
+## finding the optimal number of clusters
+
+```{r}
+library(NbClust)
+library(tidyverse)  
+library(cluster)    
+library(factoextra) 
+library(dendextend)
+fviz_nbclust(online.norm,FUN = hcut, method="wss")
+```
+
+```{r}
+#using silhoutte method to compare the elbow method and silhoutte
+fviz_nbclust(online.norm, FUN = hcut, method = "silhouette")
+```
+
+```{r}
+plot(hc, cex = 0.6)
+rect.hclust(hc, k = 3, border = 2:5)
 ```
 
 # Challenging the Solution
 
-challenge the solution using in hierarchical clustering using method set at average
+challenge the solution using in hierarchical clustering using method set
+at average
 
 ```{r}
-clusters1 <- hclust(dist(scaled_online1[, 9:15]),method="average")
+clusters1 <- hclust(dist(online.norm),method="average")
 plot(clusters)
 ```
 
 ```{r}
 cut <- cutree(clusters1, 10)
-table(cut,scaled_online.class)
+table(cut,online.class)
 ```
 
-using the two columns 9 and 15 which are Page Values and Traffic Type, it managed to classify the revenue class better according the table above compared to using Product related duration and bounce rates columns
+# Follow up Questions
 
-# Follow up Questions 
+-   Kmeans clustering is preferred for this type of dataset due its
+    dimensions, kmeans also produced higher clusters that are slightly
+    distinguishable from the visualization compared to Hierarchical
+    clustering
 
--    Kmeans clustering is preferred for this type of dataset due its dimensions, kmeans also produced higher clusters that can be distinguishable from the visualization compared to Hierarchical clustering
-
--   However, kmeans requires that the clusters should be predetermined, and it was difficult to determine the number of clusters for optimization. It was a tie between 3 and 8. Kmeans is also sensitive to scaling data, data needs to be scaled first so that all variables are equally used during clustering.
+-   However, kmeans requires that the clusters to be predetermined, and
+    it was difficult to determine the number of clusters for
+    optimization. It was a tie between 2 and 3. Kmeans is also sensitive
+    to scaling data, data needs to be scaled first so that all variables
+    are equally used during clustering.

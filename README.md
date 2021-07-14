@@ -22,7 +22,7 @@ Author: **Joan Njoki**
  > 
 *Kira Plastinina is a fashion retail store located in China,Russia, Belarus, Ukraine, Philippines, Kazakhstan, Armenia and Ukraine mostly targeting ladies between 15 - 25 years.*
 
-*My goal is getting meaningful insights of customers behavioral patterns and behavior using data collected within the past one year
+> *My goal is getting meaningful insights of customers behavioral patterns and behavior using data collected within the past one year
 ---
 ## Featured Notebooks
 > R Markdown in HTML format
